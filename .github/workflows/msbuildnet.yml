@@ -10,8 +10,8 @@ on:
 jobs:
   build:
 
-    if: github.repository == 'Tampa/opensim'
-    runs-on: [self-hosted, windows-server]
+    if: ${{ github.repository == 'Tampa/opensim' }}
+    runs-on: self-hosted
 
     steps:
     - uses: actions/checkout@v4
