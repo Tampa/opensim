@@ -34,6 +34,10 @@ jobs:
       id: build
       run: dotnet build --configuration Release OpenSim.sln
 
+    - name: ScriptSyntaxUpdate
+      run: |
+        python $env:GITHUB_WORKSPACE\share\GenScriptSyntax\GenScriptSyntax.py $env:GITHUB_WORKSPACE $env:GITHUB_WORKSPACE\bin
+
     - name: release
       if: success()
       run: powershell -Command "Compress-Archive -Path bin, ThirdPartyLicenses, README.md, CONTRIBUTORS.txt, LICENSE.txt -DestinationPath LastDotNetBuild.zip"
