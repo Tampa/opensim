@@ -10,8 +10,8 @@ on:
 jobs:
   build:
 
-    if: github.repository == 'opensim/opensim'
-    runs-on: ubuntu-latest
+    if: github.repository == 'Tampa/opensim'
+    runs-on: [self-hosted, windows-server]
     steps:
     - uses: actions/checkout@v4
     - name: shortsha
@@ -37,26 +37,3 @@ jobs:
           tag_name: r${{ steps.vars.outputs.sha_short }}
           name: LastDotNetAutoBuild
           files: LastDotNetBuild.zip
-
-    - name: report push to irc if from main OpenSim repository
-      if: github.event_name == 'push' && github.repository_owner == 'opensim'
-      uses: rectalogic/notify-irc@v1
-      with:
-        channel: "#opensim-dev"
-        server: "irc.libera.chat"
-        nickname: osgithub
-        message: |
-          ${{ github.actor }} pushed to ${{ github.repository }}
-          ${{ join(github.event.commits.*.message, '\n') }}
-          dotnet compile: ${{ steps.build.conclusion }}
-
-    - name: manual report to irc if from main OpenSim repository
-      if: github.event_name == 'workflow_dispatch' && github.repository_owner == 'opensim'
-      uses: rectalogic/notify-irc@v1
-      with:
-        channel: "#opensim-dev"
-        server: "irc.libera.chat"
-        nickname: osgithub
-        message: |
-          ${{ github.repository }}
-          dotnet compile: ${{ steps.build.conclusion }}
