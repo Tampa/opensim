@@ -31,7 +31,7 @@ jobs:
 
     - name: ScriptSyntaxUpdate
       run: |
-        python $env:GITHUB_WORKSPACE\share\GenScriptSyntax\GenScriptSyntax.py $env:GITHUB_WORKSPACE $env:GITHUB_WORKSPACE\bin
+        C:\Programs\Python\Python313\python.exe $env:GITHUB_WORKSPACE\share\GenScriptSyntax\GenScriptSyntax.py $env:GITHUB_WORKSPACE $env:GITHUB_WORKSPACE\bin
 
     - name: release
       if: success()
