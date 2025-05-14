@@ -10,53 +10,36 @@ on:
 jobs:
   build:
 
-    if: github.repository == 'opensim/opensim'
-    runs-on: ubuntu-latest
+    if: ${{ github.repository == 'Tampa/opensim' }}
+    runs-on: self-hosted
+
     steps:
     - uses: actions/checkout@v4
+
     - name: shortsha
       id: vars
-      run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"   
-    - name: preBuild
-      run: bash ${GITHUB_WORKSPACE}/runprebuild.sh
+      shell: bash
+      run: echo "sha_short=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
 
-    - name: Setup dotnet
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '8.0.x'
+    - name: preBuild
+      run: runprebuild.bat
+      shell: cmd
+
     - name: Build
       id: build
       run: dotnet build --configuration Release OpenSim.sln
 
+    - name: ScriptSyntaxUpdate
+      run: |
+        C:\Programs\Python\Python313\python.exe $env:GITHUB_WORKSPACE\share\GenScriptSyntax\GenScriptSyntax.py $env:GITHUB_WORKSPACE $env:GITHUB_WORKSPACE\bin
+
     - name: release
       if: success()
-      run: zip -r LastDotNetBuild.zip bin ThirdPartyLicenses README.md CONTRIBUTORS.txt LICENSE.txt 
+      run: powershell -Command "Compress-Archive -Path bin, ThirdPartyLicenses, README.md, CONTRIBUTORS.txt, LICENSE.txt -DestinationPath LastDotNetBuild.zip"
+
     - uses: softprops/action-gh-release@v1
       if: success()
       with:
-          tag_name: r${{ steps.vars.outputs.sha_short }}
-          name: LastDotNetAutoBuild
-          files: LastDotNetBuild.zip
-
-    - name: report push to irc if from main OpenSim repository
-      if: github.event_name == 'push' && github.repository_owner == 'opensim'
-      uses: rectalogic/notify-irc@v1
-      with:
-        channel: "#opensim-dev"
-        server: "irc.libera.chat"
-        nickname: osgithub
-        message: |
-          ${{ github.actor }} pushed to ${{ github.repository }}
-          ${{ join(github.event.commits.*.message, '\n') }}
-          dotnet compile: ${{ steps.build.conclusion }}
-
-    - name: manual report to irc if from main OpenSim repository
-      if: github.event_name == 'workflow_dispatch' && github.repository_owner == 'opensim'
-      uses: rectalogic/notify-irc@v1
-      with:
-        channel: "#opensim-dev"
-        server: "irc.libera.chat"
-        nickname: osgithub
-        message: |
-          ${{ github.repository }}
-          dotnet compile: ${{ steps.build.conclusion }}
+        tag_name: r${{ steps.vars.outputs.sha_short }}
+        name: LastDotNetAutoBuild
+        files: LastDotNetBuild.zip
