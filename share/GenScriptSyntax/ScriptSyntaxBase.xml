@@ -1,0 +1,321 @@
+<key>controls</key>
+<map>
+ <key>do</key>
+  <map>
+  <key>tooltip</key><string>do / while loop\ndo {\n...\n} while (&lt;condition&gt;);</string>
+ </map>
+ <key>else</key>
+ <map>
+  <key>tooltip</key>
+  <string>if / else block\nif (&lt;condition&gt;) {\n...\n[} else [if (&lt;condition&gt;) {\n...]]\n}</string>
+ </map>
+ <key>for</key>
+ <map>
+  <key>tooltip</key>
+  <string>for loop\nfor (&lt;initializer&gt;; &lt;condition&gt;; &lt;post-iteration-statement&gt;)\n{ ...\n}</string>
+ </map>
+ <key>if</key>
+ <map>
+  <key>tooltip</key>
+  <string>if / else block\nif (&lt;condition&gt;) {\n...\n[} else [if (&lt;condition&gt;) {\n...]]\n}</string>
+ </map>
+ <key>jump</key>
+ <map>
+  <key>tooltip</key>
+  <string>jump statement\njump &lt;label&gt;</string>
+ </map>
+ <key>return</key>
+ <map>
+  <key>tooltip</key>
+  <string>Leave current event or function.\nreturn [&lt;variable&gt;];\nOptionally pass back a variable's value, from a function.</string>
+ </map>
+ <key>state</key>
+ <map>
+  <key>tooltip</key>
+  <string>state &lt;target&gt;\nIf the target state is not the same as the current one, change to the target state.</string>
+ </map>
+ <key>while</key>
+ <map>
+  <key>tooltip</key>
+  <string>while loop\nwhile (&lt;condition&gt;) {\n,,,\n}</string>
+ </map>
+</map>
+<key>types</key>
+<map>
+ <key>float</key>
+ <map>
+  <key>tooltip</key>
+  <string>32 bit floating point value.\nThe range is 1.175494351E-38 to 3.402823466E+38</string>
+ </map>
+ <key>integer</key>
+ <map>
+  <key>tooltip</key>
+  <string>32 bit integer value.\n−2,147,483,648 and +2,147,483,647</string>
+ </map>
+ <key>key</key>
+ <map>
+  <key>tooltip</key>
+  <string>A 128 bit unique identifier (UUID)</string>
+ </map>
+ <key>list</key>
+ <map>
+  <key>tooltip</key>
+  <string>A collection of other data types. e.g. [0, 1, 2, 3, 4] or ["Yes", "No", "Perhaps"].</string>
+ </map>
+ <key>rotation</key>
+ <map>
+  <key>tooltip</key>
+  <string>A rotation as quaternion &lt;x, y, z, s&gt;</string>
+ </map>
+ <key>string</key>
+ <map>
+  <key>tooltip</key>
+  <string>Text data.\nThe editor accepts UTF-8 encoded text.</string>
+ </map>
+ <key>vector</key>
+ <map>
+  <key>tooltip</key>
+  <string>A vector &lt;x, y, z&gt;</string>
+ </map>
+</map>
+<key>events</key>
+<map>
+ <key>at_rot_target</key><map>
+  <key>arguments</key><array>
+   <map><key>TargetNumber</key><map><key>type</key><string>integer</string></map></map>
+   <map><key>TargetRotation</key><map><key>type</key><string>rotation</string></map></map>
+   <map><key>CurrentRotation</key><map><key>type</key><string>rotation</string></map></map>
+  </array>
+  <key>tooltip</key><string>Triggered when a script comes within a defined angle of a target rotation. The range and rotation, are set by a call to llRotTarget</string>
+ </map>
+ <key>at_target</key><map>
+  <key>arguments</key><array>
+   <map><key>TargetNumber</key><map><key>type</key><string>integer</string></map></map>
+   <map><key>TargetPosition</key><map><key>type</key><string>vector</string></map></map>
+   <map><key>CurrentPosition</key><map><key>type</key><string>vector</string></map></map>
+  </array>
+  <key>tooltip</key><string>Triggered when the scripted object comes within a defined range of the target position, defined by the llTarget function call</string>
+ </map>
+ <key>attach</key><map>
+  <key>arguments</key><array>
+   <map><key>AvatarID</key><map><key>type</key><string>key</string></map></map>
+  </array>
+  <key>tooltip</key><string>Triggered whenever an object is attached or detached from an avatar. If it is attached, the key of the avatar it is attached to is passed in, otherwise NULL_KEY is</string>
+ </map>
+ <key>changed</key><map>
+  <key>arguments</key><array>
+   <map><key>Changed</key><map><key>type</key><string>integer</string></map></map>
+  </array>
+  <key>tooltip</key><string>Triggered when various events change the object. The change argument will be a bit-field of CHANGED_* constants</string>
+ </map>
+ <key>collision</key><map>
+  <key>arguments</key><array>
+   <map><key>NumberOfCollisions</key><map><key>type</key><string>integer</string></map></map>
+  </array>
+  <key>tooltip</key><string>Raised while another object, or avatar, is colliding with the object the script is attached to. The number of detected objects is passed to the script. Information on those objects may be gathered via the llDetected* functions</string>
+ </map>
+ <key>collision_end</key><map>
+  <key>arguments</key><array>
+   <map><key>NumberOfCollisions</key><map><key>type</key><string>integer</string></map></map>
+  </array>
+  <key>tooltip</key><string>Raised when another object, or avatar, stops colliding with the object the script is attached to. Information on objects may be gathered via the llDetected* library functions</string>
+ </map>
+ <key>collision_start</key><map>
+  <key>arguments</key><array>
+   <map><key>NumberOfCollisions</key><map><key>type</key><string>integer</string></map></map>
+  </array>
+  <key>tooltip</key><string>Raised when another object, or avatar, starts colliding with the object the script is attached to. Information on objects may be gathered via the llDetected* library functions</string>
+ </map>
+ <key>control</key><map>
+  <key>arguments</key><array>
+   <map><key>AvatarID</key><map><key>type</key><string>key</string></map></map>
+   <map><key>Levels</key><map><key>type</key><string>integer</string></map></map>
+   <map><key>Edges</key><map><key>type</key><string>integer</string></map></map>
+  </array>
+  <key>tooltip</key><string>Once a script has the ability to grab control inputs from the avatar, this event will be used to pass the commands into the script.The levels and edges are bit-fields of control constants</string>
+ </map>
+ <key>dataserver</key><map>
+  <key>arguments</key><array>
+   <map><key>RequestID</key><map><key>type</key><string>key</string></map></map>
+   <map><key>Data</key><map><key>type</key><string>string</string></map></map>
+  </array>
+  <key>tooltip</key><string>Triggered when the requested data is returned to the script.
+   Data may be requested by the llRequestAgentData, llRequestInventoryData, and llGetNotecardLine function calls, for example </string>
+ </map>
+ <key>email</key><map>
+  <key>arguments</key><array>
+   <map><key>Time</key><map><key>type</key><string>string</string></map></map>
+   <map><key>Address</key><map><key>type</key><string>string</string></map></map>
+   <map><key>Subject</key><map><key>type</key><string>string</string></map></map>
+   <map><key>Body</key><map><key>type</key><string>string</string></map></map>
+   <map><key>NumberRemaining</key><map><key>type</key><string>integer</string></map></map>
+  </array>
+  <key>tooltip</key><string>Triggered when an email sent to this script arrives.
+   The number remaining tells how many more emails are known to be still pending</string>
+ </map>
+ <key>http_request</key><map>
+  <key>arguments</key><array>
+   <map><key>HTTPRequestID</key><map><key>type</key><string>key</string></map></map>
+   <map><key>HTTPMethod</key><map><key>type</key><string>string</string></map></map>
+   <map><key>Body</key><map><key>type</key><string>string</string></map></map>
+  </array>
+  <key>tooltip</key><string>Triggered when task receives an HTTP request.</string>
+ </map>
+ <key>http_response</key><map>
+  <key>arguments</key><array>
+   <map><key>HTTPRequestID</key><map><key>type</key><string>key</string></map></map>
+   <map><key>Status</key><map><key>type</key><string>integer</string></map></map>
+   <map><key>Metadata</key><map><key>type</key><string>list</string></map></map>
+   <map><key>Body</key><map><key>type</key><string>string</string></map></map>
+ 	</array>
+  <key>tooltip</key><string>Invoked when an HTTP response is received for a pending llHTTPRequest request or if a pending request fails or times out</string>
+ </map>
+ <key>land_collision</key><map>
+  <key>arguments</key><array>
+   <map><key>Position</key><map><key>type</key><string>vector</string></map></map>
+  </array>
+  <key>tooltip</key><string>Raised when the object the script is attached to is colliding with the ground</string>
+ </map>
+ <key>land_collision_end</key><map>
+  <key>arguments</key><array>
+   <map><key>Position</key><map><key>type</key><string>vector</string></map></map>
+  </array>
+  <key>tooltip</key><string>Raised when the object the script is attached to stops colliding with the ground</string>
+ </map>
+ <key>land_collision_start</key><map>
+  <key>arguments</key><array>
+   <map><key>Position</key><map><key>type</key><string>vector</string></map></map>
+  </array>
+  <key>tooltip</key><string>Raised when the object the script is attached to begins to collide with the ground</string>
+ </map>
+ <key>link_message</key><map>
+  <key>arguments</key><array>
+   <map><key>SendersLink</key><map><key>type</key><string>integer</string></map></map>
+   <map><key>Value</key><map><key>type</key><string>integer</string></map></map>
+   <map><key>Text</key><map><key>type</key><string>string</string></map></map>
+   <map><key>ID</key><map><key>type</key><string>key</string></map></map>
+  </array>
+  <key>tooltip</key><string>Triggered when object receives a link message via llMessageLinked function call</string>
+ </map>
+ <key>linkset_data</key><map>
+  <key>arguments</key><array>
+   <map><key>action</key><map><key>type</key><string>integer</string></map></map>
+   <map><key>name</key><map><key>type</key><string>string</string></map></map>
+   <map><key>value</key><map><key>type</key><string>string</string></map></map>
+   <map><key>ID</key><map><key>type</key><string>key</string></map></map>
+  </array>
+  <key>tooltip</key><string>Triggered when the linksetdata store is modified</string>
+ </map>
+ <key>listen</key><map>
+  <key>arguments</key><array>
+   <map><key>Channel</key><map><key>type</key><string>integer</string></map></map>
+   <map><key>Name</key><map><key>type</key><string>string</string></map></map>
+   <map><key>ID</key><map><key>type</key><string>key</string></map></map>
+   <map><key>Text</key><map><key>type</key><string>string</string></map></map>
+  </array>
+  <key>tooltip</key><string> Raised whenever a chat message matching the constraints set in the llListen command is received. The name and ID of the speaker, as well as the message, are passed in as parameters. Channel 0 is the public chat channel that all avatars see as chat text. Channels 1 through 2,147,483,648 are private channels that are not sent to avatars but other scripts can listen on those channels</string>
+ </map>
+ <key>money</key><map>
+  <key>arguments</key><array>
+   <map><key>Payer</key><map><key>type</key><string>key</string></map></map>
+   <map><key>Amount</key><map><key>type</key><string>integer</string></map></map>
+  </array>
+  <key>tooltip</key><string>Triggered when a resident has given an amount of Linden dollars to the object</string>
+ </map>
+ <key>moving_end</key><map>
+  <key>arguments</key><undef/>
+  <key>tooltip</key><string>Triggered whenever an object with this script stops moving.</string>
+ </map>
+ <key>moving_start</key><map>
+  <key>arguments</key><undef/>
+  <key>tooltip</key><string>Triggered whenever an object with this script starts moving.</string>
+ </map>
+ <key>no_sensor</key><map>
+  <key>arguments</key><undef/>
+  <key>tooltip</key><string>Raised when sensors are active, via the llSensor function call, but are not sensing anything.</string>
+ </map>
+ <key>not_at_rot_target</key><map>
+  <key>arguments</key><undef/>
+  <key>tooltip</key><string>When a target is set via the llRotTarget function call, but the script is outside the specified angle Raised.</string>
+ </map>
+ <key>not_at_target</key><map>
+  <key>arguments</key><undef/>
+  <key>tooltip</key><string>When a target is set via the llTarget library call, but the script is outside the specified range Raised.</string>
+ </map>
+ <key>object_rez</key><map>
+  <key>arguments</key><array>
+   <map><key>RezzedObjectsID</key><map><key>type</key><string>key</string></map></map>
+  </array>
+  <key>tooltip</key><string>Triggered when an object rezzes another object from its inventory via the llRezObject, or similar, functions. The id is the globally unique key for the object rezzed.</string>
+ </map>
+ <key>on_rez</key> <map>
+  <key>arguments</key><array>
+   <map><key>StartParameter</key><map><key>type</key><string>integer</string></map></map>
+  </array>
+  <key>tooltip</key><string>Triggered whenever an object is rezzed from inventory or by another object. The start parameter is passed in from the llRezObject call, or zero if from inventory.</string>
+ </map>
+ <key>remote_data</key><map>
+  <key>arguments</key><array>
+   <map><key>EventType</key><map><key>type</key><string>integer</string></map></map>
+   <map><key>ChannelID</key><map><key>type</key><string>key</string></map></map>
+   <map><key>MessageID</key><map><key>type</key><string>key</string></map></map>
+   <map><key>Sender</key><map><key>type</key><string>string</string></map></map>
+   <map><key>iData</key><map><key>type</key><string>integer</string></map></map>
+   <map><key>sData</key><map><key>type</key><string>string</string></map></map>
+  </array>
+  <key>tooltip</key><string>Triggered by various XML-RPC calls with event_type specifying the type of data</string>
+ </map>
+ <key>run_time_permissions</key><map>
+  <key>arguments</key><array>
+   <map><key>PermissionFlags</key><map><key>type</key><string>integer</string></map></map>
+  </array>
+  <key>tooltip</key><string>Scripts need permission from either the owner or the avatar they wish to act on before they may perform certain functions, such as debiting money from their owners account, triggering an animation on an avatar, or capturing control inputs. The llRequestPermissions library function is used to request these permissions and the various permissions integer constants can be supplied. The integer returned to this event handler contains the current set of permissions flags, so if permissions equal 0 then no permissions are set</string>
+ </map>
+ <key>sensor</key><map>
+  <key>arguments</key><array>
+   <map><key>NumberDetected</key><map><key>type</key><string>integer</string></map></map>
+  </array>
+  <key>tooltip</key><string>Raised whenever objects matching the constraints of the llSensor command are detected. The number of detected objects is passed to the script in the parameter. Information on those objects may be gathered via the llDetected* functions</string>
+ </map>
+ <key>state_entry</key><map>
+  <key>arguments</key><undef/>
+  <key>tooltip</key><string>The state_entry event occurs whenever a new state is entered, including at program start, and is always the first event handled</string>
+ </map>
+ <key>state_exit</key><map>
+  <key>arguments</key><undef/>
+  <key>tooltip</key><string>The state_exit event occurs whenever the state command is used to transition to another state. It is handled before the new states state_entry event</string>
+ </map>
+ <key>timer</key><map>
+  <key>arguments</key><undef/>
+  <key>tooltip</key><string>Raised at regular intervals set by the llSetTimerEvent library function</string>
+ </map>
+ <key>touch</key><map>
+  <key>arguments</key><array>
+   <map><key>NumberOfTouches</key><map><key>type</key><string>integer</string></map></map>
+  </array>
+  <key>tooltip</key><string>
+   Raised while a user is touching the object the script is attached to.
+   The number of touching objects is passed to the script in the parameter.
+   Information on those objects may be gathered via the llDetected* library functions</string>
+ </map>
+ <key>touch_end</key><map>
+  <key>arguments</key><array>
+   <map><key>NumberOfTouches</key><map><key>type</key><string>integer</string></map></map>
+  </array>
+  <key>tooltip</key><string>Raised when a user stops touching the object the script is attached to. The number of touches is passed to the script in the parameter. Information on those objects may be gathered via the llDetected* library functions</string>
+ </map>
+ <key>touch_start</key><map>
+  <key>arguments</key><array>
+   <map><key>NumberOfTouches</key><map><key>type</key><string>integer</string></map></map>
+  </array>
+  <key>tooltip</key><string>Raised when a user first touches the object the script is attached to. The number of touches is passed to the script in the parameter. Information on those objects may be gathered via the llDetected() library functions</string>
+ </map>
+ <key>transaction_result</key><map>
+  <key>arguments</key><array>
+   <map><key>RequestID</key><map><key>type</key><string>key</string></map></map>
+   <map><key>Success</key><map><key>type</key><string>integer</string></map></map>
+   <map><key>Message</key><map><key>type</key><string>string</string></map></map>
+  </array>
+  <key>tooltip</key><string>Triggered by llTransferMoney() function</string>
+ </map>
+</map>
