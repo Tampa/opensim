@@ -46,6 +46,7 @@ jobs:
   build:
     
     needs: sync
+    if: needs.sync.outputs.should_build == 'true'
     runs-on: self-hosted
 
     steps:
