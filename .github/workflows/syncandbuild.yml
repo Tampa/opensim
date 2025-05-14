@@ -22,7 +22,7 @@ jobs:
           git config --global --add safe.directory $env:GITHUB_WORKSPACE
 
       - name: Add upstream remote
-        run: git remote add upstream https://github.com/Tampa/opensim.git
+        run: git remote add upstream https://github.com/opensim/opensim.git
 
       - name: Check for new commits in upstream
         id: check
