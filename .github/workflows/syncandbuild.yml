@@ -21,6 +21,11 @@ jobs:
         run: |
           git config --global --add safe.directory $env:GITHUB_WORKSPACE
 
+      - name: Clean up existing remotes and add upstream
+        run: |
+          git remote remove upstream || echo "No upstream remote to remove"
+          git remote add upstream https://github.com/opensim/opensim.git
+
       - name: Check for new commits in upstream
         id: check
         shell: powershell
