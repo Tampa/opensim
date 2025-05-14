@@ -23,16 +23,16 @@ jobs:
 
       - name: Check for new commits in upstream
         id: check
-        shell: pwsh
+        shell: powershell
         run: |
           git fetch origin master
           git fetch upstream master
           $count = git rev-list origin/master..upstream/master --count
-          echo "commits_found=$count"
+          Write-Output "commits_found=$count"
           if ($count -gt 0) {
-            echo "should_build=true" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+            "should_build=true" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
           } else {
-            echo "should_build=false" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+            "should_build=false" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
           }
 
       - name: Sync Fork
