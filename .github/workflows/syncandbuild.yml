@@ -23,7 +23,7 @@ jobs:
 
       - name: Clean up existing remotes and add upstream
         run: |
-          git remote remove upstream || echo "No upstream remote to remove"
+          git remote remove upstream
           git remote add upstream https://github.com/opensim/opensim.git
 
       - name: Check for new commits in upstream
