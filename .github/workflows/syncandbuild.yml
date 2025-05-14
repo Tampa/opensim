@@ -24,21 +24,19 @@ jobs:
       - name: Add upstream remote
         run: git remote add upstream https://github.com/Tampa/opensim.git
 
-      - name: Fetch remotes
+      - name: Check for new commits in upstream
+        id: check
+        shell: pwsh
         run: |
           git fetch origin master
           git fetch upstream master
-
-      - name: Check for new commits in upstream
-        id: check
-        run: |
-          COUNT=$(git rev-list origin/master..upstream/master --count)
-          echo "commits_found=${COUNT}" >> $GITHUB_OUTPUT
-          if [ "$COUNT" -gt 0 ]; then
-            echo "should_build=true" >> $GITHUB_OUTPUT
-          else
-            echo "should_build=false" >> $GITHUB_OUTPUT
-          fi
+          $count = git rev-list origin/master..upstream/master --count
+          echo "commits_found=$count"
+          if ($count -gt 0) {
+            echo "should_build=true" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          } else {
+            echo "should_build=false" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          }
 
       - name: Sync Fork
         if: steps.check.outputs.commits_found != '0'
