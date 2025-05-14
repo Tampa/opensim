@@ -19,7 +19,7 @@ jobs:
 
       - name: Trust repository ownership
         run: |
-          git config --global --add safe.directory $GITHUB_WORKSPACE
+          git config --global --add safe.directory $env:GITHUB_WORKSPACE
 
       - name: Add upstream remote
         run: git remote add upstream https://github.com/Tampa/opensim.git
