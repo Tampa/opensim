@@ -9,7 +9,7 @@ jobs:
   sync:
     runs-on: self-hosted
     outputs:
-      should_build: ${{ steps.check.outputs.commits_found }}
+      should_build: ${{ steps.check.outputs.should_build }}
 
     steps:
       - name: Checkout repo
@@ -41,7 +41,7 @@ jobs:
           }
 
       - name: Sync Fork
-        if: steps.check.outputs.commits_found != '0'
+        if: steps.check.outputs.should_build == 'true'
         uses: tgymnich/fork-sync@v2.0.10
         with:
           owner: Tampa
