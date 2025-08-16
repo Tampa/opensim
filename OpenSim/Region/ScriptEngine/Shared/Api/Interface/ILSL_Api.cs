@@ -534,5 +534,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Interfaces
                void llSetLinkSitFlags(LSL_Integer linknum, LSL_Integer flags);
          LSL_String llHMAC(LSL_String private_key, LSL_String message, LSL_String algo);
          LSL_String llComputeHash(LSL_String message, LSL_String algo);
+         LSL_String llGetRenderMaterial(LSL_Integer face);
+        LSL_Integer llIsLinkGLTFMaterial(LSL_Integer linknum, LSL_Integer face);
     }
 }
