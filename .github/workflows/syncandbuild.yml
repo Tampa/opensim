@@ -1,0 +1,86 @@
+name: Sync and Build
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: self-hosted
+    outputs:
+      should_build: ${{ steps.check.outputs.should_build }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Trust repository ownership
+        run: |
+          git config --global --add safe.directory $env:GITHUB_WORKSPACE
+
+      - name: Clean up existing remotes and add upstream
+        run: |
+          git remote remove upstream
+          git remote add upstream https://github.com/opensim/opensim.git
+
+      - name: Check for new commits in upstream
+        id: check
+        shell: powershell
+        run: |
+          git fetch origin master
+          git fetch upstream master
+          $count = git rev-list origin/master..upstream/master --count
+          Write-Output "commits_found=$count"
+          if ($count -gt 0) {
+            "should_build=true" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          } else {
+            "should_build=false" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          }
+
+      - name: Sync Fork
+        if: steps.check.outputs.should_build == 'true'
+        uses: tgymnich/fork-sync@v2.0.10
+        with:
+          owner: Tampa
+          base: master
+          head: master
+
+  build:
+    
+    needs: sync
+    if: needs.sync.outputs.should_build == 'true'
+    runs-on: self-hosted
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: shortsha
+      id: vars
+      shell: bash
+      run: echo "sha_short=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+
+    - name: preBuild
+      run: runprebuild.bat
+      shell: cmd
+
+    - name: Build
+      id: build
+      run: dotnet build --configuration Release OpenSim.sln
+
+    - name: ScriptSyntaxUpdate
+      run: |
+        C:\Programs\Python\Python313\python.exe $env:GITHUB_WORKSPACE\share\GenScriptSyntax\GenScriptSyntax.py $env:GITHUB_WORKSPACE $env:GITHUB_WORKSPACE\bin
+
+    - name: release
+      if: success()
+      run: powershell -Command "Compress-Archive -Path bin, ThirdPartyLicenses, README.md, CONTRIBUTORS.txt, LICENSE.txt -DestinationPath LastDotNetBuild.zip"
+
+    - uses: softprops/action-gh-release@v1
+      if: success()
+      with:
+        tag_name: r${{ steps.vars.outputs.sha_short }}
+        name: LastDotNetAutoBuild
+        files: LastDotNetBuild.zip
