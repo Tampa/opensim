@@ -35,7 +35,6 @@ namespace osWebRtcVoice
 {
     public class VoiceViewerSession : IVoiceViewerSession
     {
-
         // A simple session structure that is used when the connection is actually in the
         //    remote service.
         public VoiceViewerSession(IWebRtcVoiceService pVoiceService, UUID pRegionId, UUID pAgentId)
@@ -44,13 +43,13 @@ namespace osWebRtcVoice
             AgentId = pAgentId;
             ViewerSessionID = UUID.Random().ToString();
             VoiceService = pVoiceService;
-
         }
         public string ViewerSessionID { get; set; }
         public IWebRtcVoiceService VoiceService { get; set; }
         public string VoiceServiceSessionId { get; set; }
         public UUID RegionId { get; set; }
         public UUID AgentId { get; set; }
+        public IVoiceViewerSession.VFlags Flags { get; set; }
 
         // =====================================================================
         // ViewerSessions hold the connection information for the client connection through to the voice service.

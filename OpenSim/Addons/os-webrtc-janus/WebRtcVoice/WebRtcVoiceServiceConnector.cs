@@ -81,7 +81,7 @@ namespace osWebRtcVoice
         public IVoiceViewerSession CreateViewerSession(OSDMap pRequest, UUID pUserID, UUID pSceneID)
         {
             m_log.Debug($"{LogHeader} CreateViewerSession");
-            return new VoiceViewerSession(this, pSceneID, pUserID);   
+            return new VoiceViewerSession(this, pSceneID, pUserID);
         }
 
         public OSDMap ProvisionVoiceAccountRequest(OSDMap pRequest, UUID pUserID, UUID pSceneID)
@@ -93,7 +93,7 @@ namespace osWebRtcVoice
         // Received a ProvisionVoiceAccountRequest from a viewer. Forward it to the WebRTC service.
         public OSDMap ProvisionVoiceAccountRequest(IVoiceViewerSession pVSession, OSDMap pRequest, UUID pUserID, UUID pSceneID)
         {
-            m_log.Debug($"{LogHeader} VoiceSignalingRequest. uID={pUserID}, sID={pSceneID}");
+            m_log.Debug($"{LogHeader} ProvisionVoiceAccountRequest. uID={pUserID}, sID={pSceneID}");
             OSDMap req = new()
             {
                 { "request", pRequest },
