@@ -326,13 +326,14 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
 
             if (item is null)
             {
-                m_log.ErrorFormat(
-                    "[INVENTORY ACCESS MODULE]: Could not find item {0} for caps inventory update", itemID);
+                m_log.Error($"[INVENTORY ACCESS MODULE]: Could not find item {itemID} for caps inventory update");
                 return UUID.Zero;
             }
 
             if (item.Owner.NotEqual(remoteClient.AgentId))
                 return UUID.Zero;
+
+            string reportAlert = null;
 
             InventoryType itemType = (InventoryType)item.InvType;
             switch (itemType)
@@ -345,7 +346,7 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
                         return UUID.Zero;
                     }
 
-                    remoteClient.SendAlertMessage("Notecard updated");
+                    reportAlert = "Notecard updated";
                     break;
                 }
                 case InventoryType.LSL:
@@ -356,7 +357,7 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
                         return UUID.Zero;
                     }
 
-                    remoteClient.SendAlertMessage("Script updated");
+                    reportAlert = "Script updated";
                     break;
                 }
                 case (InventoryType)CustomInventoryType.AnimationSet:
@@ -385,7 +386,7 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
                         return UUID.Zero;
                     }
 
-                    remoteClient.SendAlertMessage("gesture updated");
+                    reportAlert = "gesture updated";
                     break;
                 }
                 case InventoryType.Settings:
@@ -396,7 +397,7 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
                         return UUID.Zero;
                     }
 
-                    remoteClient.SendAlertMessage("Setting updated");
+                    reportAlert = "Setting updated";
                     break;
                 }
                 case InventoryType.Material:
@@ -412,32 +413,63 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
 
             AssetBase asset = CreateAsset(item.Name, item.Description, (sbyte)item.AssetType, data, remoteClient.AgentId.ToString());
             item.AssetID = asset.FullID;
-            m_Scene.AssetService.Store(asset);
 
-            m_Scene.InventoryService.UpdateItem(item);
+            string storeResult = m_Scene.AssetService.Store(asset);
+            if (!string.IsNullOrEmpty(storeResult) && !storeResult.Equals(UUID.ZeroString, StringComparison.OrdinalIgnoreCase))
+            {
+                m_Scene.InventoryService.UpdateItem(item);
+                if(!string.IsNullOrEmpty(reportAlert))
+                    remoteClient.SendAlertMessage(reportAlert);
+                return asset.FullID;
+            }
 
-            // remoteClient.SendInventoryItemCreateUpdate(item);
-            return (asset.FullID);
+            m_log.Warn($"[INVENTORY ACCESS MODULE]: Failed to store asset {asset.FullID}, retrying...");
+
+            storeResult = m_Scene.AssetService.Store(asset);
+            if (!string.IsNullOrEmpty(storeResult) && !storeResult.Equals(UUID.ZeroString, StringComparison.OrdinalIgnoreCase))
+            {
+                m_Scene.InventoryService.UpdateItem(item);
+                if(!string.IsNullOrEmpty(reportAlert))
+                    remoteClient.SendAlertMessage(reportAlert);
+                return asset.FullID;
+            }
+
+            m_log.Error($"[INVENTORY ACCESS MODULE]: Failed to store asset {asset.FullID}, inventory item update ignored");
+            remoteClient.SendAlertMessage("Update failed");
+            return UUID.Zero;
         }
 
         public virtual bool UpdateInventoryItemAsset(UUID ownerID, InventoryItemBase item, AssetBase asset)
         {
-            if (item is not null && asset is not null && item.Owner.Equals(ownerID))
-            {
-                //m_log.DebugFormat(
-                //    "[INVENTORY ACCESS MODULE]: Updating item {0} {1} with new asset {2}",
-                //    item.Name, item.ID, asset.ID);
-
-                m_Scene.AssetService.Store(asset);
-                m_Scene.InventoryService.UpdateItem(item);
-                return true;
-            }
-            else
+            if (item is null || asset is null || item.Owner.NotEqual(ownerID))
             {
                 m_log.ErrorFormat("[INVENTORY ACCESS MODULE]: Given invalid item for inventory update: {0}",
                     (item is null || asset is null? "null item or asset" : "wrong owner"));
                 return false;
             }
+
+            //m_log.DebugFormat(
+            //    "[INVENTORY ACCESS MODULE]: Updating item {0} {1} with new asset {2}",
+            //    item.Name, item.ID, asset.ID);
+
+            string storeResult = m_Scene.AssetService.Store(asset);
+            if (!string.IsNullOrEmpty(storeResult) && !storeResult.Equals(UUID.ZeroString, StringComparison.OrdinalIgnoreCase))
+            {
+                m_Scene.InventoryService.UpdateItem(item);
+                return true;
+            }
+
+            m_log.Warn($"[INVENTORY ACCESS MODULE]: Failed to store asset {asset.FullID}, retrying...");
+
+            storeResult = m_Scene.AssetService.Store(asset);
+            if (!string.IsNullOrEmpty(storeResult) && !storeResult.Equals(UUID.ZeroString, StringComparison.OrdinalIgnoreCase))
+            {
+                m_Scene.InventoryService.UpdateItem(item);
+                return true;
+            }
+
+            m_log.Error($"[INVENTORY ACCESS MODULE]: Failed to store asset {asset.FullID}, inventory item not updated");
+            return false;
         }
 
         public virtual List<InventoryItemBase> CopyToInventory(
