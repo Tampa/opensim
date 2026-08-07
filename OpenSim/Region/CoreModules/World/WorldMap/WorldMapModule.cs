@@ -27,7 +27,6 @@
 
 using System;
 using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -161,6 +160,19 @@ namespace OpenSim.Region.CoreModules.World.WorldMap
                 Util.GetConfigVarFromSections<bool>(config, "LocalV1MapAssets", configSections, m_localV1MapAssets);
             m_mapTilesDirectory =
                 Util.GetConfigVarFromSections<string>(config, "MapTilesDirectory", configSections, m_mapTilesDirectory);
+            if(!string.IsNullOrEmpty(m_mapTilesDirectory))
+            {
+                try
+                {
+                    Directory.CreateDirectory(m_mapTilesDirectory);
+                }
+                catch(Exception e)
+                {
+                    m_log.Error($"[WORLD MAP]: failed to create folder {m_mapTilesDirectory} for local map tiles {e.Message}");
+                    m_mapTilesDirectory = null;
+                }
+            }
+
         }
 
         public virtual void AddRegion(Scene scene)
@@ -1340,12 +1352,12 @@ namespace OpenSim.Region.CoreModules.World.WorldMap
             startX--;
             startY--;
 
-            bool doneLocal = false;
+            bool doneLocal;
             string filename = "MAP-" + m_scene.RegionInfo.RegionID.ToString() + ".png";
-            if (!string.IsNullOrEmpty(m_mapTilesDirectory))
-                filename = Path.Combine(m_mapTilesDirectory, filename);
             try
             {
+                if (!string.IsNullOrEmpty(m_mapTilesDirectory))
+                    filename = Path.Combine(m_mapTilesDirectory, filename);
                 using(Image localMap = Bitmap.FromFile(filename))
                 {
                     int x = regionX - startX;
@@ -1364,7 +1376,11 @@ namespace OpenSim.Region.CoreModules.World.WorldMap
                 }
                 doneLocal = true;
             }
-            catch {}
+            catch(Exception ex)
+            {
+                m_log.Error($"[WORLD MAP]: failed Export map file {ex.Message}");
+                return;
+            }
 
             if(regions.Count > 0)
             {
