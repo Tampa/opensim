@@ -137,6 +137,18 @@ namespace OpenSim.Region.CoreModules.World.Warp3DMap
 
             m_mapTilesDirectory =
                 Util.GetConfigVarFromSections<string>(source, "MapTilesDirectory", configSections, m_mapTilesDirectory);
+            if(!string.IsNullOrEmpty(m_mapTilesDirectory))
+            {
+                try
+                {
+                    Directory.CreateDirectory(m_mapTilesDirectory);
+                }
+                catch(Exception e)
+                {
+                    m_log.Error($"[MAPTILE]: failed to create folder {m_mapTilesDirectory} for local map tiles {e.Message}");
+                    m_mapTilesDirectory = null;
+                }
+            }
         }
 
         public void AddRegion(Scene scene)
@@ -215,10 +227,8 @@ namespace OpenSim.Region.CoreModules.World.Warp3DMap
             // image may be reloaded elsewhere, so no compression format
             string filename = "MAP-" + m_scene.RegionInfo.RegionID.ToString() + ".png";
             if (!string.IsNullOrEmpty(m_mapTilesDirectory))
-            {
-                Directory.CreateDirectory(m_mapTilesDirectory);
                 filename = System.IO.Path.Combine(m_mapTilesDirectory, filename);
-            }
+
             tile.Save(filename,ImageFormat.Png);
             m_primMesher = null;
             return tile;
