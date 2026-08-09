@@ -1337,10 +1337,15 @@ namespace OpenSim.Region.Framework.Scenes
         {
             string IDstr = assetID.ToString();
             AssetBase asset = m_assetService.Get(IDstr, m_assetServerURL, true);
-            if (asset is null)
-                m_log.Debug($"[HGUUIDGatherer]: Failed to fetch asset {IDstr} from {m_assetServerURL}");
-            else
-                m_log.Debug($"[HGUUIDGatherer]: Copied asset {IDstr} from {m_assetServerURL} to local asset server");
+            // Per-asset Debug is expensive (sync File+Console). Only when HTTP debug is on:
+            //   debug http all|out N   (WebUtil.DebugLevel > 0)
+            if (WebUtil.DebugLevel > 0)
+            {
+                if (asset is null)
+                    m_log.Debug($"[HGUUIDGatherer]: Failed to fetch asset {IDstr} from {m_assetServerURL}");
+                else
+                    m_log.Debug($"[HGUUIDGatherer]: Copied asset {IDstr} from {m_assetServerURL} to local asset server");
+            }
 
             return asset;
         }
