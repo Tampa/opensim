@@ -57,7 +57,7 @@ namespace OpenSim.Framework
         public const int LandUnit = 4; // parcels only have sizes multiple of this
 
         public const float MinSimulationHeight = -100f;
-        public const float MaxSimulationHeight = 50000f;
+        public const float MaxSimulationHeight = 65536f;
         public const float MinTerrainHeightmap = -100f;
         public const float MaxTerrainHeightmap = 4000f;
         public const float MinWaterHeight = 0;
