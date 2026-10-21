@@ -1843,7 +1843,7 @@ namespace OpenSim.Framework
                 return ia;
 
             // If it is already an IP, don't let GetHostEntry see it
-            if (IPAddress.TryParse(dnsAddress, out ia) && ia != null)
+            if (IPAddress.TryParse(dnsAddress, out ia))
             {
                 if (ia.Equals(IPAddress.Any) || ia.Equals(IPAddress.IPv6Any))
                     return null;

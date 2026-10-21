@@ -85,6 +85,32 @@ namespace OpenSim.Framework
             return ip;
         }
 
+        public static IPAddress TryParseIP(string address)
+        {
+            if(string.IsNullOrEmpty(address))
+                return null;
+            int dotindx = address.LastIndexOf('.');
+            if(dotindx > 4)
+            { 
+                dotindx += 2;
+                if(dotindx < address.Length - 1)
+                {
+                    int indx = address.IndexOf(':', dotindx);
+                    if (indx > -1)
+                        address = address[..indx];
+                }
+            }
+            if (IPAddress.TryParse(address, out IPAddress ip))
+            {
+                if (ip.Equals(IPAddress.Any) || ip.Equals(IPAddress.IPv6Any))
+                    return null;
+                if (ip.IsIPv4MappedToIPv6)
+                    ip = ip.MapToIPv4();
+                return ip;
+            }
+            return null;
+        }
+
         public static void AddImpl(string entry)
         {
             if (entry.Contains('/'))
@@ -174,14 +200,14 @@ namespace OpenSim.Framework
                     int i = addrs.Length - 1;
                     while (i >= 0)
                     {
-                        addrip = GetIP(addrs[i]);
+                        addrip = TryParseIP(addrs[i]);
                         if(!Contains(addrip))
                             break;
                         lastproxy = addrip;
                         i--;
                     }
                     // TODO private ips
-                    if(addrip != null && (!Util.IsPrivateNetwork(addrip) || Util.IsPrivateNetwork(lastproxy)))
+                    if(i >= 0 && addrip != null && (!Util.IsPrivateNetwork(addrip) || Util.IsPrivateNetwork(lastproxy)))
                     {
                         xffremote = new IPEndPoint(addrip, LocalIPEndPoint.Port);
                         shortheader = addrs[i];
